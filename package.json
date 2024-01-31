@@ -1,0 +1,19 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "description": "file manager project for nodejs course. RS School",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lexarudak/file-manager.git"
+  },
+  "author": "Aliaksei Rudak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lexarudak/file-manager/issues"
+  },
+  "homepage": "https://github.com/lexarudak/file-manager#readme"
+}
