@@ -1,8 +1,8 @@
 import { getMessage, messages } from "../messages.js"
 import { store } from "../store.js"
-import { resolve, dirname, join } from "path"
+import { resolve, dirname, join, basename } from "path"
 import { getCurrentDirFiles } from "../helpers.js"
-import { writeFile, rename } from "fs/promises"
+import { writeFile, rename, copyFile } from "fs/promises"
 import { createReadStream } from "fs"
 import { pipeline } from "stream/promises"
 import { Transform } from "stream"
@@ -93,6 +93,19 @@ export const rn = (path_to_file, new_filename) => ({
       const oldPath = resolve(path_to_file)
       const newPath = join(dirname(oldPath), new_filename)
       await rename(oldPath, newPath, { flag: "wx" })
+    } catch {
+      console.log(messages.operationError);
+    }
+  },
+  message: () => getMessage(process.cwd()).currentDir,
+})
+
+export const cp = (path_to_file, path_to_new_directory) => ({
+  before: async () => {
+    try {
+      const pathFrom = resolve(path_to_file)
+      const newPath = resolve(path_to_new_directory)
+      await copyFile(pathFrom, join(newPath, basename(pathFrom)), { flag: "wx" })
     } catch {
       console.log(messages.operationError);
     }
