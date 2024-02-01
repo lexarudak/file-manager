@@ -1,7 +1,6 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { getMessage } from "./messages.js"
-import { store } from "./store.js"
+import { readdir, mkdir, copyFile } from "fs/promises"
 
 export const getDirname = () => {
   const __filename = fileURLToPath(import.meta.url)
@@ -9,7 +8,22 @@ export const getDirname = () => {
   return __dirname
 }
 
-export const closeStream = () => {
-  console.log(getMessage(store.username).goodbyeMessage);
-  process.stdin.destroy()
+export const getCurrentDirFiles = async () => {
+  const filesList = await readdir(process.cwd(), { withFileTypes: true })
+  const dirsAndFiles = filesList.reduce((acc, file) => {
+    file.isDirectory() ? acc.dirs.push({
+      Name: file.name,
+      Type: "directory"
+    }) : acc.files.push({
+      Name: file.name,
+      Type: "file"
+    })
+    return acc
+  }, {
+    files: [],
+    dirs: []
+  })
+
+  const { dirs, files } = dirsAndFiles
+  return [ ...dirs, ...files ]
 }
