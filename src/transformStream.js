@@ -6,7 +6,7 @@ export const transformStream = new Transform({
     const { message, before, after } = controller(chunk);
 
     if (before) await before()
-    this.push(`${message}\n`)
+    this.push(`${message()}\n`)
     if (after) await after()
 
     callback();
