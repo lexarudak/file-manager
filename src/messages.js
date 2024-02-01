@@ -7,5 +7,6 @@ export const getMessage = (value) => ({
 export const messages = {
   enterCommand: '\n*Please, enter your command*',
   invalidInput: 'Invalid input',
-  upperError: 'You are trying to get above the home directory'
+  upperError: 'You are trying to get above the home directory',
+  operationError: 'Operation failed'
 }
