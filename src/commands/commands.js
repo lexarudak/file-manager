@@ -1,4 +1,4 @@
-import { exit, error, up, ls, cd, cat} from "./actions.js"
+import { exit, error, up, ls, cd, cat, add} from "./actions.js"
 
 export const commands = {
   error,
@@ -6,5 +6,6 @@ export const commands = {
   ls,
   cd,
   cat,
+  add,
   ".exit": exit,
 }
