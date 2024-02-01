@@ -1,8 +1,8 @@
 import { getMessage, messages } from "../messages.js"
 import { store } from "../store.js"
-import { resolve } from "path"
+import { resolve, dirname, join } from "path"
 import { getCurrentDirFiles } from "../helpers.js"
-import { writeFile } from "fs/promises"
+import { writeFile, rename } from "fs/promises"
 import { createReadStream } from "fs"
 import { pipeline } from "stream/promises"
 import { Transform } from "stream"
@@ -80,6 +80,19 @@ export const add = (path) => ({
   before: async () => {
     try {
       await writeFile(resolve(path), '', { flag: "wx" })
+    } catch {
+      console.log(messages.operationError);
+    }
+  },
+  message: () => getMessage(process.cwd()).currentDir,
+})
+
+export const rn = (path_to_file, new_filename) => ({
+  before: async () => {
+    try {
+      const oldPath = resolve(path_to_file)
+      const newPath = join(dirname(oldPath), new_filename)
+      await rename(oldPath, newPath, { flag: "wx" })
     } catch {
       console.log(messages.operationError);
     }
