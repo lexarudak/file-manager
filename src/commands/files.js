@@ -26,20 +26,14 @@ export const error = () => ({
 export const exit = () => ({
   action: () => {
     setMessage(getMessage(store.username).goodbyeMessage)
+    store.end = true
     process.stdin.pause()
   }
 })
 
 export const up = () => ({
-  action: () => {
-    const currentDir = process.cwd()
-    const homeDir = process.env.HOME
-    if (!(currentDir === homeDir)) {
-      process.chdir("..")
-    } else {
-      setError(messages.upperError)
-    }
-  }})
+  action: () => process.chdir("..")
+})
 
 export const ls = () => ({
     action: async () => {

@@ -12,7 +12,7 @@ export const transformStream = new Transform({
 
     this.push(store.error || store.message)
     if (store.error || store.message) this.push(os.EOL)
-    this.push(printCurrentDir())
+    if (!store.end) this.push(printCurrentDir())
     this.push(os.EOL)
     this.push(os.EOL)
 
