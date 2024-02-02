@@ -1,10 +1,10 @@
-import { setUsername } from "./src/set_username.js"
-import { startStream } from "./src/streams.js"
+import { setUsername } from "./src/utils/helpers.js"
+import mainPipeline from "./src/main_pipeline.js"
 
 const app = async () => {
   setUsername()
 
-  await startStream()
+  await mainPipeline()
 }
 
 export default app

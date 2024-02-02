@@ -1,4 +1,4 @@
-import { commands } from "./commands/commands.js"
+import * as commands from "../commands/files.js"
 
 export const controller = (chunk) => {
   const line = chunk.toString().trim()
