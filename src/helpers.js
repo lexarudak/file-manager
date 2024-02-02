@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import { readdir, mkdir, copyFile } from "fs/promises"
+import { dirname, join } from 'path';
+import { readdir, access } from "fs/promises"
 
 export const getDirname = () => {
   const __filename = fileURLToPath(import.meta.url)
@@ -27,3 +27,29 @@ export const getCurrentDirFiles = async () => {
   const { dirs, files } = dirsAndFiles
   return [ ...dirs, ...files ]
 }
+
+const makeCopyName = (name, copyNumber) => {
+  if (copyNumber === 1) return `${name}_copy`
+  return `${name}_copy_${copyNumber - 1}`
+}
+
+export const getAvailableName = async (path, name, copyNumber) => {
+  const nameToCheck = copyNumber ? makeCopyName(name, copyNumber) : name 
+
+  try {
+    await access(join(path, nameToCheck))
+    return await getAvailableName(path, name, copyNumber ? copyNumber + 1 : 1) 
+  } catch {
+    return nameToCheck
+  }
+}
+
+export const checkNoSameFile = async (path) => {
+  try {
+    await access(path)
+    throw 'EXIST'
+  } catch (e) {
+    if (e === "EXIST") throw new Error("File already exist")
+    return Promise.resolve()
+  }
+} 

@@ -1,9 +1,9 @@
 import { getMessage, messages } from "../messages.js"
 import { store } from "../store.js"
 import { resolve, dirname, join, basename } from "path"
-import { getCurrentDirFiles } from "../helpers.js"
-import { writeFile, rename, copyFile } from "fs/promises"
-import { createReadStream } from "fs"
+import { getCurrentDirFiles, getAvailableName, checkNoSameFile } from "../helpers.js"
+import { writeFile, rename, unlink } from "fs/promises"
+import { createReadStream, createWriteStream } from "fs"
 import { pipeline } from "stream/promises"
 import { Transform } from "stream"
 
@@ -105,7 +105,45 @@ export const cp = (path_to_file, path_to_new_directory) => ({
     try {
       const pathFrom = resolve(path_to_file)
       const newPath = resolve(path_to_new_directory)
-      await copyFile(pathFrom, join(newPath, basename(pathFrom)), { flag: "wx" })
+
+      const name = await getAvailableName(newPath, basename(pathFrom))
+
+      const readStream = createReadStream(pathFrom)
+      const writeStream = createWriteStream(join(newPath, name))
+      
+      await pipeline(readStream, writeStream)
+    } catch {
+      console.log(messages.operationError);
+    }
+  },
+  message: () => getMessage(process.cwd()).currentDir,
+})
+
+export const mv = (path_to_file, path_to_new_directory) => ({
+  before: async () => {
+    try {
+      const pathFrom = resolve(path_to_file)
+      const newPath = resolve(path_to_new_directory)
+
+      await checkNoSameFile(join(newPath, basename(pathFrom)))
+
+      const readStream = createReadStream(pathFrom)
+      const writeStream = createWriteStream(join(newPath, basename(pathFrom)))
+      
+      await pipeline(readStream, writeStream)
+      await unlink(pathFrom)
+
+    } catch {
+      console.log(messages.operationError);
+    }
+  },
+  message: () => getMessage(process.cwd()).currentDir,
+})
+
+export const rm = (path_to_file) => ({
+  before: async () => {
+    try {
+      await unlink(resolve(path_to_file))
     } catch {
       console.log(messages.operationError);
     }
