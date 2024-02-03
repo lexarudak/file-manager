@@ -1,4 +1,4 @@
-import { getMessage, messages } from "./utils/messages.js"
+import { getMessage, infoTable, messages } from "./utils/messages.js"
 import { store } from "./store/store.js"
 import { transformStream } from "./transform_stream.js"
 import { pipeline } from "stream/promises"
@@ -11,7 +11,10 @@ const mainPipeline = async () => {
   const { helloMessage } = getMessage(store.username)
   const { currentDir } = getMessage(process.cwd())
 
-  console.log([helloMessage, currentDir, messages.enterCommand].join(os.EOL))
+  console.log(helloMessage)
+  console.table(infoTable);
+  console.log(currentDir);
+  console.log(messages.enterCommand);
   
   pipeline(process.stdin, transformStream, process.stdout)
 }

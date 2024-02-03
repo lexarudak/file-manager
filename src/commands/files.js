@@ -1,4 +1,4 @@
-import { getMessage, messages } from "../utils/messages.js"
+import { getMessage, messages, infoTable } from "../utils/messages.js"
 import { store } from "../store/store.js"
 import { resolve, dirname, join, basename } from "path"
 import { 
@@ -39,6 +39,12 @@ export const ls = () => ({
     action: async () => {
       const data = await getCurrentDirFiles()
       console.table(data)
+    },
+  })
+
+export const info = () => ({
+    action: async () => {
+      console.table(infoTable)
     },
   })
 
