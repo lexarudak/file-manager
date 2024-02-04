@@ -7,7 +7,8 @@ import os from "os"
 
 
 const mainPipeline = async () => {
-  process.chdir(process.env.HOME)
+  process.chdir(os.homedir())
+
   const { helloMessage } = getMessage(store.username)
   const { currentDir } = getMessage(process.cwd())
 
@@ -16,7 +17,8 @@ const mainPipeline = async () => {
   console.log(currentDir);
   console.log(messages.enterCommand);
   
-  pipeline(process.stdin, transformStream, process.stdout)
+  await pipeline(process.stdin, transformStream, process.stdout)
+  
 }
 
 export default mainPipeline

@@ -51,13 +51,9 @@ export const info = () => ({
 export const cd = (path) => ({
   action: () => {
     try {
-      if(resolve(path).startsWith(process.env.HOME)) {
-        process.chdir(path)
-      } else {
-        throw new Error('up')
-      }
-    } catch (e) {
-      setError(e.message === 'up' ? messages.upperError : messages.invalidInput);
+      process.chdir(path)
+    } catch {
+      setError(path ? messages.operationError : messages.invalidInput);
     }
   },
 })
