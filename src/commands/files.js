@@ -1,4 +1,4 @@
-import { getMessage, messages, infoTable } from "../utils/messages.js"
+import { getMessage, messages, infoTable, notice } from "../utils/messages.js"
 import { store } from "../store/store.js"
 import { resolve, dirname, join, basename } from "path"
 import { 
@@ -45,15 +45,16 @@ export const ls = () => ({
 export const info = () => ({
     action: async () => {
       console.table(infoTable)
+      console.log('\x1b[36m%s\x1b[0m', notice); 
     },
   })
 
-export const cd = (path) => ({
+export const cd = (args) => ({
   action: () => {
     try {
-      process.chdir(path)
+      process.chdir(args.join(" "))
     } catch {
-      setError(path ? messages.operationError : messages.invalidInput);
+      setError(args.length ? messages.operationError : messages.invalidInput);
     }
   },
 })
@@ -72,7 +73,7 @@ export const cat = (path) => ({
     });
   
     try {
-      const readStream = createReadStream(resolve(path))
+      const readStream = createReadStream(resolve(path.join(" ")))
       await pipeline(readStream, pushToMain)
     } catch {
       setError(messages.operationError);
@@ -84,16 +85,17 @@ export const cat = (path) => ({
 export const add = (path) => ({
   action: async () => {
     try {
-      await writeFile(resolve(path), '', { flag: "wx" })
+      await writeFile(resolve(path.join(" ")), '', { flag: "wx" })
     } catch {
       setError(messages.operationError);
     }
   }
 })
 
-export const rn = (path_to_file, new_filename) => ({
+export const rn = ([path_to_file, new_filename]) => ({
   action: async () => {
     try {
+      console.log(path_to_file, new_filename);
       const oldPath = resolve(path_to_file)
       const newPath = join(dirname(oldPath), new_filename)
       await rename(oldPath, newPath, { flag: "wx" })
@@ -103,7 +105,7 @@ export const rn = (path_to_file, new_filename) => ({
   },
 })
 
-export const cp = (path_to_file, path_to_new_directory) => ({
+export const cp = ([path_to_file, path_to_new_directory]) => ({
   action: async () => {
     try {
       const pathFrom = resolve(path_to_file)
@@ -121,7 +123,7 @@ export const cp = (path_to_file, path_to_new_directory) => ({
   },
 })
 
-export const mv = (path_to_file, path_to_new_directory) => ({
+export const mv = ([path_to_file, path_to_new_directory]) => ({
   action: async () => {
     try {
       const pathFrom = resolve(path_to_file)
@@ -144,7 +146,7 @@ export const mv = (path_to_file, path_to_new_directory) => ({
 export const rm = (path_to_file) => ({
   action: async () => {
     try {
-      await unlink(resolve(path_to_file))
+      await unlink(resolve(path_to_file.join(' ')))
     } catch {
       setError(messages.operationError);
     }
@@ -154,7 +156,7 @@ export const rm = (path_to_file) => ({
 export const hash = (path_to_file) => ({
   action: async () => {
     try {
-      const readStream = createReadStream(resolve(path_to_file))
+      const readStream = createReadStream(resolve(path_to_file.join(' ')))
       const hash = createHash("sha256")
 
       await pipeline(readStream, hash)
@@ -165,7 +167,7 @@ export const hash = (path_to_file) => ({
   }
 })
 
-export const compress = (path_to_file, path_to_destination) => ({
+export const compress = ([path_to_file, path_to_destination]) => ({
   action: async () => {
     try {
       const pathFrom = resolve(path_to_file)
@@ -184,7 +186,7 @@ export const compress = (path_to_file, path_to_destination) => ({
   }
 })
 
-export const decompress = (path_to_file, path_to_destination) => ({
+export const decompress = ([path_to_file, path_to_destination]) => ({
   action: async () => {
     try {
       const pathFrom = resolve(path_to_file)

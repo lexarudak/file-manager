@@ -84,10 +84,12 @@ export const infoTable = [
   },
   {
     Command: 'decompress path_to_file path_to_destination',
-    Description: 'Decompress file',
+    Description: 'Decompress file. "use path in "',
   },
   {
     Command: '.exit',
     Description: 'Finish work',
   },
 ]
+
+export const notice = 'Notice! When using commands with two arguments, use "quoted path/your.file" if you have spaces in the path or file name'
