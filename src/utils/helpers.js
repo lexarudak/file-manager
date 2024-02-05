@@ -83,7 +83,7 @@ export const checkNoSameFile = async (path) => {
 
 export const setUsername = () => {
   const args = process.argv.slice(2);
-  const usernameInfo = args.find((val) => val.startsWith("--username="))
+  const usernameInfo = args.find((val) => val.startsWith("--username=")) || ''
   const [, username] = usernameInfo.split('=');
-  store.username = username
+  store.username = username || 'User'
 }
